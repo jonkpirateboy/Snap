@@ -101,7 +101,7 @@ def snap_check_average_price():
 
 endpoint = 'https://api.tibber.com/v1-beta/gql'
 headers = {
-  'Authorization': 'Bearer 5ntXzdGSAFkRj138j0v7O8T6-6hEOYyy6g7-FGSdIAQ',
+  'Authorization': 'Bearer YOUR-TOKEN-HERE',
   'Content-Type': 'application/json'
 }
 
