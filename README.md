@@ -1,5 +1,12 @@
 # Snap
-Code and build instructions for [Snap](https://www.instagram.com/p/CVXhBlCs5un/)
+Code and build instructions for [Snap](https://www.instagram.com/p/CVXhBlCs5un/), a simple Raspberry Pi and LED machine to show you how expensive the electricyty is at the moment. On row of LEDs shows the cost of the hour, the other row the cost of the day.
+
+Like this.
+1. Only Green = Very cheap
+2. Green & Orange = Cheap
+3. Only Orange = Ok
+4. Orange & Red = Expensive
+5. Only Red = Very expensive
 
 ## Setup
 Install [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) on a Raspberry Pi
