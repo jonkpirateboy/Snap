@@ -5,6 +5,7 @@ import time
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
+# Turn on all the lights in sequence on startup
 def snap_intro():
   # red
   snap_led(18,"on")
@@ -35,6 +36,7 @@ def snap_intro():
   time.sleep(.5)
   snap_led(16,"off")
 
+# Function for turning on a LED
 def snap_led(pin,state):
   GPIO.setup(pin,GPIO.OUT)
   if state == 'on':
@@ -44,6 +46,7 @@ def snap_led(pin,state):
     # print str(pin) + " off"
     GPIO.output(pin,GPIO.LOW)
 
+# Check current price and turn on/off LEDs accordingly
 def snap_check_current_energy_price():
   if current_energy > very_expensive:
     print('Live in cave now')
@@ -71,6 +74,8 @@ def snap_check_current_energy_price():
     snap_led(18,'off')
     snap_led(23,'off')
 
+# Check todays price and turn on/off LEDs accordingly
+# I deduct 33% of the dayly price since 8 hours (at night) is almost always cheap. Otherwise the dayly price would always look a bit too pessimistic.
 def snap_check_average_price():
   avarage_part = 0.6666667;
   if today_average > (very_expensive*avarage_part):
@@ -99,17 +104,20 @@ def snap_check_average_price():
     snap_led(25,'off')
     snap_led(8,'off')
 
+# Contact Tibber
 endpoint = 'https://api.tibber.com/v1-beta/gql'
 headers = {
   'Authorization': 'Bearer YOUR-TOKEN-HERE',
   'Content-Type': 'application/json'
 }
 
+# Price breakpoins
 very_expensive = 3 # only red, under this = orange and red
 expensive = 2 # orange and red, under this = orange
 ok = 1 # only orange, under this = green and orange
 cheap = .5 # green and orange, under this = only green
 
+# The query to be sent to Tibber
 query = """{
   viewer {
     homes {
@@ -135,8 +143,10 @@ query = """{
 }
 """
 
+# Run the intro
 snap_intro()
 
+# Running the Snap
 while True:
   try:
     r = requests.post(endpoint, json={'query': query}, headers=headers)
