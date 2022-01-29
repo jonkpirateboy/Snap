@@ -141,10 +141,10 @@ while True:
   try:
     r = requests.post(endpoint, json={'query': query}, headers=headers)
 
-    current_energy = (r.json()['data']['viewer']['homes'][1]['currentSubscription']['priceInfo']['current']['energy'])
+    current_energy = (r.json()['data']['viewer']['homes'][0]['currentSubscription']['priceInfo']['current']['energy'])
     print('Current energy: ' + str(current_energy))
 
-    today_average_hours = (r.json()['data']['viewer']['homes'][1]['currentSubscription']['priceInfo']['today'])
+    today_average_hours = (r.json()['data']['viewer']['homes'][0]['currentSubscription']['priceInfo']['today'])
     tmp_average = 0
     today_average = 0
     for hour in today_average_hours:

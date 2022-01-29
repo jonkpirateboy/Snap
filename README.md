@@ -14,6 +14,12 @@ Go to [Tibber](https://developer.tibber.com/settings/accesstoken) and get your A
 
 Edit the downloaded script, and change YOUR-TOKEN-HERE to your Access Token.
 
+If you have more than one home, change:
+```
+['homes'][0]
+```
+to reflect which home you are pulling data from. To see which home you want to use, go to [Tibbers Api Explorer](https://developer.tibber.com/explorer) and Load your personal token and simply run "Homes" in the drop down.
+
 Open console and enter:
 ```
 sudo nano /etc/rc.local
