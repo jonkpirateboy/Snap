@@ -30,8 +30,6 @@ Install [pywizlight](https://github.com/sbidy/pywizlight)
 
 `pip install pywizlight`
 
-Restart your Pi and press watch the lights.
-
 ### The script
 
 Download [the script](snap.py) and put it in your home folder, for example /home/pi/.
@@ -46,15 +44,18 @@ If you have more than one home, change:
 ```
 to reflect which home you are pulling data from. To see which home you want to use, go to [Tibbers Api Explorer](https://developer.tibber.com/explorer) and Load your personal token and simply run "Homes" in the drop down.
 
-Open console and enter:
-```
-sudo nano /etc/rc.local
-```
-In /etc/rc.local you enter:
-```
-python /home/pi/snap.py
-```
-before exit 0, that will make the script run on startup.
+
+If you want the script to start automatically when the pi is booted run this command:
+
+`crontab -e`
+
+Answer `1`
+
+Add this to the file:
+
+`@reboot /bin/sleep 10; /usr/bin/python /home/pi/snap.py`
+
+Restart your Pi and press watch the lights.
 
 ## Learn and experiment
 
