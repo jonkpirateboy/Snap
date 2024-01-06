@@ -1,6 +1,8 @@
 # Snap
 Code and build instructions for [Snap](https://www.instagram.com/p/CVXhBlCs5un/), a simple Raspberry Pi and LED machine to show you how expensive the electricyty is at the moment. On row of LEDs shows the cost of the hour, the other row the cost of the day.
 
+UPDATE: Added a [Wiz bulb](https://www.wizconnected.com/en-ca/products/bulbs) to show the eneryg cost too. Simply change the variable `ip` to the ip address of your bulb. If you don't want to use the Wiz, simply set `wiz` to `False`
+
 Like this.
 1. Only Green = Very cheap
 2. Green & Orange = Cheap
@@ -9,11 +11,28 @@ Like this.
 5. Only Red = Very expensive
 
 ## Setup
+
 Install [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) on a Raspberry Pi
+
+### LED
 
 Buy some [LEDs, wires and a breadboard](https://www.instagram.com/p/CU1-_8KsBTz/). I only used the [breadboard](https://www.instagram.com/p/CU7GH0gMow4/) while building.
 
 Connect the LEDs to the GPIO pins of your liking, you can see which one I used in my script.
+
+### Wiz
+
+Install pip:
+
+`sudo apt install python3-pip`
+
+Install [pywizlight](https://github.com/sbidy/pywizlight)
+
+`pip install pywizlight`
+
+Restart your Pi and press watch the lights.
+
+### The script
 
 Download [the script](snap.py) and put it in your home folder, for example /home/pi/.
 
@@ -36,8 +55,6 @@ In /etc/rc.local you enter:
 python /home/pi/snap.py
 ```
 before exit 0, that will make the script run on startup.
-
-Restart your Pi and press watch the lights.
 
 ## Learn and experiment
 

@@ -1,12 +1,30 @@
 import RPi.GPIO as GPIO
+import asyncio
 import requests
 import time
+
+from pywizlight import wizlight, PilotBuilder
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
+led = True
+wiz = True
+
+if wiz == True:
+  ip = '192.168.86.26'
+
 # Turn on all the lights in sequence on startup
 def snap_intro():
+  # clean slate
+  snap_led(18,"off")
+  snap_led(23,"off")
+  snap_led(24,"off")
+  snap_led(25,"off")
+  snap_led(8,"off")
+  snap_led(7,"off")
+  snap_led(16,"off")
+  time.sleep(1)
   # red
   snap_led(18,"on")
   time.sleep(.5)
@@ -38,41 +56,58 @@ def snap_intro():
 
 # Function for turning on a LED
 def snap_led(pin,state):
-  GPIO.setup(pin,GPIO.OUT)
-  if state == 'on':
-    # print str(pin) + " on"
-    GPIO.output(pin,GPIO.HIGH)
-  else:
-    # print str(pin) + " off"
-    GPIO.output(pin,GPIO.LOW)
+  if led == True:
+    GPIO.setup(pin,GPIO.OUT)
+    if state == 'on':
+      # print str(pin) + " on"
+      GPIO.output(pin,GPIO.HIGH)
+    else:
+      # print str(pin) + " off"
+      GPIO.output(pin,GPIO.LOW)
 
 # Check current price and turn on/off LEDs accordingly
-def snap_check_current_energy_price():
+async def snap_check_current_energy_price():
+  if wiz == True:
+    light = wizlight(ip)
   if current_energy > very_expensive:
     print('Live in cave now')
     snap_led(18,'on')
     snap_led(23,'off')
     snap_led(24,'off')
+    if wiz == True:
+      await light.turn_on(PilotBuilder(rgb = (255, 0, 0)))
   elif current_energy > expensive:
     print('You can use one thing now')
     snap_led(18,'on')
     snap_led(23,'on')
     snap_led(24,'off')
+    if wiz == True:
+      await light.turn_on(PilotBuilder(rgb = (255, 50, 0)))
   elif current_energy > ok:
     print('Turn on some stuff now')
     snap_led(23,'on')
     snap_led(18,'off')
     snap_led(24,'off')
+    if wiz == True:
+      await light.turn_on(PilotBuilder(rgb = (255,140,0)))
   elif current_energy > cheap:
     print('Turn on everything now!')
     snap_led(24,'on')
     snap_led(18,'off')
     snap_led(23,'on')
+    if wiz == True:
+      await light.turn_on(PilotBuilder(rgb = (255,255,224)))
   else:
     print('Turn on everything now! Even stuff you do not use.')
     snap_led(24,'on')
     snap_led(18,'off')
     snap_led(23,'off')
+    if wiz == True:
+      await light.turn_on(PilotBuilder(rgb = (255, 255, 255)))
+
+async def snap_error_wiz():
+  light = wizlight(ip)
+  await light.turn_on(PilotBuilder(rgb = (0, 0, 255)))
 
 # Check todays price and turn on/off LEDs accordingly
 # I deduct 33% of the dayly price since 8 hours (at night) is almost always cheap. Otherwise the dayly price would always look a bit too pessimistic.
@@ -107,7 +142,7 @@ def snap_check_average_price():
 # Contact Tibber
 endpoint = 'https://api.tibber.com/v1-beta/gql'
 headers = {
-  'Authorization': 'Bearer YOUR-TOKEN-HERE',
+  'Authorization': 'Bearer 5ntXzdGSAFkRj138j0v7O8T6-6hEOYyy6g7-FGSdIAQ',
   'Content-Type': 'application/json'
 }
 
@@ -144,7 +179,8 @@ query = """{
 """
 
 # Run the intro
-snap_intro()
+if led == True:
+  snap_intro()
 
 # Running the Snap
 while True:
@@ -163,7 +199,8 @@ while True:
     today_average = tmp_average / 24
     print('Today Average: ' + str(today_average))
 
-    snap_check_current_energy_price()
+    # snap_check_current_energy_price()
+    asyncio.run(snap_check_current_energy_price())
     snap_check_average_price()
 
     snap_led(16,"on")
@@ -173,4 +210,6 @@ while True:
     time.sleep(60)
   except:
     snap_led(16,"on")
+    if wiz == True:
+      asyncio.run(snap_error_wiz())
     time.sleep(60)
