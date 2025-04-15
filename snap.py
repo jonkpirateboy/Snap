@@ -12,7 +12,7 @@ led = True
 wiz = True
 
 if wiz == True:
-  ip = '192.168.86.26'
+  ip = 'YOUR-WIZ-IP-HERE'
 
 # Turn on all the lights in sequence on startup
 def snap_intro():
@@ -207,9 +207,11 @@ while True:
     time.sleep(.1)
     snap_led(16,"off")
 
-    time.sleep(60)
+    break
   except:
     snap_led(16,"on")
     if wiz == True:
       asyncio.run(snap_error_wiz())
-    time.sleep(60)
+    time.sleep(10)
+  
+  time.sleep(60)
