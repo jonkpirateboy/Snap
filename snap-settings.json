@@ -1,0 +1,15 @@
+{
+    "tibber_api_key": "YOUR-TOKEN-HERE",
+    "wiz_hostname": "YOUR-WIZ-HOST-HERE",
+    "wiz_fallback_ip": "YOUR-WIZ-IP-HERE",
+    "home_index": 0,
+    "led": true,
+    "wiz": true,
+    "price_breakpoints": {
+        "very_expensive": 3,
+        "expensive": 2,
+        "ok": 1,
+        "cheap": 0.5
+    }
+}
+  

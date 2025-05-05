@@ -3,6 +3,8 @@ Code and build instructions for [Snap](https://www.instagram.com/p/CVXhBlCs5un/)
 
 UPDATE: Added a [Wiz bulb](https://www.wizconnected.com/en-ca/products/bulbs) to show the eneryg cost too. Simply change the variable `ip` to the ip address of your bulb. If you don't want to use the Wiz, simply set `wiz` to `False`
 
+UPDATE: Moved all settings to the snap-settings.json file
+
 Like this.
 1. Only Green = Very cheap
 2. Green & Orange = Cheap
@@ -30,20 +32,29 @@ Install [pywizlight](https://github.com/sbidy/pywizlight)
 
 `pip install pywizlight`
 
-### The script
+### The setup
 
-Download [the script](snap.py) and put it in your home folder, for example /home/pi/.
+Download [the script](snap.py) and [the settings file](snap-settings.json) and put them in your home folder, for example /home/pi/.
 
 Go to [Tibber](https://developer.tibber.com/settings/accesstoken) and get your Access Token.
 
-Edit the downloaded script, and change YOUR-TOKEN-HERE to your Access Token.
+Edit the downloaded settings file, and change YOUR-TOKEN-HERE to your Access Token.
 
 If you have more than one home, change:
 ```
-['homes'][0]
+"home_index": 0
 ```
 to reflect which home you are pulling data from. To see which home you want to use, go to [Tibbers Api Explorer](https://developer.tibber.com/explorer) and Load your personal token and simply run "Homes" in the drop down.
 
+Change these settings in the settings file if you don't want to use the leds or a wiz light:
+```
+"led": true,
+"wiz": true,
+```
+
+If you are using a wiz-light, make sure to change the host name and ip for it.
+
+You can also change the breakpoints in the settings file too if you wish.
 
 If you want the script to start automatically when the pi is booted run this command:
 
