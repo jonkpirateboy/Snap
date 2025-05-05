@@ -68,6 +68,28 @@ Add this to the file:
 
 Restart your Pi and press watch the lights.
 
+### Settings in a web UI
+
+If you want to have a simple web UI for the settings run this command:
+
+`crontab -e`
+
+Answer `1`
+
+Add this to the file:
+
+`@reboot /bin/sleep 10; /usr/bin/python3 /home/snap/snap-settings-web-ui.py`
+
+And also: 
+
+`sudo visudo`
+
+And then add this at the end of the file:
+
+`pi ALL=(ALL) NOPASSWD: /sbin/reboot`
+
+After that you can browse to http://YOUR-HOST:5000 and make the settings.
+
 ## Learn and experiment
 
 If you want to change your script [Tibber has an excellent playground here](https://developer.tibber.com/explorer).
