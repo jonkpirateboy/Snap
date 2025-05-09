@@ -1,0 +1,49 @@
+.nav.nav-tabs {
+    border-color: var(--bs-nav-tabs-link-active-bg);
+}
+.nav-link,
+.nav-link:hover {
+    color: var(--bs-body-color);
+}
+.spinner { 
+    width: 3rem; height: 3rem; 
+}
+
+.status-led {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    opacity: 0.5;
+    transition: all 0.3s ease;
+    margin-top: -.2rem;
+}
+
+.status-led.on {
+    opacity: 1;
+    box-shadow: 0 0 8px currentColor;
+}
+
+#sync-status {
+    margin-bottom: 0;
+}
+
+.status-led.red { 
+    background-color: #ff4c4c; 
+    color: #ff4c4c; 
+}
+.status-led.orange { 
+    background-color: #ffa500; 
+    color: #ffa500; 
+}
+.status-led.green { 
+    background-color: #4caf50; 
+    color: #4caf50; 
+}
+.status-led.blue { 
+    background-color: #2196f3; 
+    color: #2196f3; 
+}

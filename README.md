@@ -34,7 +34,7 @@ Install [pywizlight](https://github.com/sbidy/pywizlight)
 
 ### The setup
 
-Download [the script](snap.py) and [the settings file](snap-settings.json) and put them in your home folder, for example /home/pi/.
+Download the files and folders and put them in your home folder, for example /home/pi/.
 
 Go to [Tibber](https://developer.tibber.com/settings/accesstoken) and get your Access Token.
 
