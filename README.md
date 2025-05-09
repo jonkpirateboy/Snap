@@ -70,7 +70,7 @@ Restart your Pi and press watch the lights.
 
 ### Settings in a web UI
 
-![Screenshot of the web UI](assets/screenshot.png)
+![Screenshot of the web UI](assets/screenshot.jpg)
 
 If you want to have a web UI for the settings run this command:
 
