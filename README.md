@@ -64,7 +64,7 @@ Answer `1`
 
 Add this to the file:
 
-`@reboot /bin/sleep 10; /usr/bin/python /home/pi/snap.py`
+`@reboot /usr/bin/python3 /home/snap/snap_runner.py &`
 
 Restart your Pi and press watch the lights.
 
