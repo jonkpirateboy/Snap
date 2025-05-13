@@ -37,22 +37,33 @@ def fetch_current_price(settings):
     }
 
     query = """{
-      viewer {
+    viewer {
         homes {
-          currentSubscription {
+        currentSubscription {
             priceInfo {
-              current { energy }
-              today { energy }
+            current {
+                total
+                energy
+                tax
+                startsAt
             }
-          }
+            today {
+                total
+                energy
+                tax
+                startsAt
+            }
+            }
         }
-      }
+        }
+    }
     }"""
+
 
     response = requests.post(endpoint, json={'query': query}, headers=headers)
     data = response.json()['data']['viewer']['homes'][settings['home_index']]['currentSubscription']['priceInfo']
     return {
-        "current_energy": data['current']['energy'],
+        "current_energy": data['current']['total'],
         "today_prices": data['today']
     }
 
@@ -94,10 +105,19 @@ def get_status():
             avg_status = "very_cheap"
 
         return {
-            "current_energy": result["current_energy"],
+            "current_energy": f"{result['current_energy']:.2f}".replace(".", ","),
             "status": status,
             "average_energy": avg,
-            "average_status": avg_status
+            "average_status": avg_status,
+            "raw_hours": [
+                {
+                    "startsAt": hour["startsAt"],
+                    "total": hour["total"]
+                }
+                for hour in today_prices
+                if "startsAt" in hour and "total" in hour
+            ]
+
         }
 
 

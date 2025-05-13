@@ -57,3 +57,8 @@ body.alert-warning {
 body.alert-success {
     background-color: var(--bs-success-bg-subtle);
 }
+
+#priceChart {
+    width: 100%;
+    max-height: 600px;
+}

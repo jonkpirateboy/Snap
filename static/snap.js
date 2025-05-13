@@ -21,6 +21,10 @@ function updateStatus() {
         };
         body.classList.add(bgMap[data.status] || "alert-light");
       }
+      console.log("Chart data:", data.raw_hours);
+      if (data.raw_hours) {
+        renderChart(data.raw_hours);
+      }
     });
 }
 
@@ -75,7 +79,7 @@ const energyEl = document.getElementById("current-energy");
 const labelEl = document.getElementById("status-label");
 const alertEl = document.getElementById("status-alert");
 
-if (energyEl) energyEl.textContent = data.current_energy.toFixed(2);
+if (energyEl) energyEl.textContent = data.current_energy.toFixed(2).replace('.', ',');
 
 if (labelEl) {
   const labels = {
@@ -86,4 +90,94 @@ if (labelEl) {
     very_cheap: "Very Cheap"
   };
   labelEl.textContent = labels[data.status] || data.status;
+}
+
+// Chart
+let chart;
+
+function renderChart(data) {
+  const canvas = document.getElementById("priceChart");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+
+  const labels = data.map(item => {
+    const date = new Date(item.startsAt);
+    return !isNaN(date) ? date.getHours().toString().padStart(2, "0") + ":00" : "??";
+  });
+
+  const prices = data.map(item => item.total ?? null);
+
+  if (chart) chart.destroy(); // Reset existing chart
+
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels,
+        datasets: [{
+        label: 'kr/kWh',
+        data: prices,
+        segment: {
+            borderColor: ctx => {
+            const y = ctx.p0.parsed.y;
+            if (y > 2.0) return 'red';
+            if (y > 1.5) return 'orange';
+            if (y > 1.0) return 'gold';
+            if (y > 0.5) return 'green';
+            return 'lightgreen';
+            }
+        },
+        pointBackgroundColor: prices.map(y => {
+            if (y > 2.0) return 'red';
+            if (y > 1.5) return 'orange';
+            if (y > 1.0) return 'gold';
+            if (y > 0.5) return 'green';
+            return 'lightgreen';
+        }),
+        backgroundColor: 'rgba(0,0,0,0)', // no fill
+        fill: false,
+        tension: 0.3,
+        pointRadius: 5
+        }]
+    },
+    options: {
+        animation: false,
+        responsive: true,
+        plugins: {
+        legend: {
+            labels: {
+            usePointStyle: true,
+            pointStyle: 'line',
+            color: '#000'
+            }
+        },
+        tooltip: {
+            mode: 'nearest',
+            intersect: false,
+            displayColors: false,
+            callbacks: {
+                label: function(context) {
+                return `${context.parsed.y.toFixed(2).replace('.', ',')} kr/kWh`;
+                }
+            }
+        }
+        },
+        scales: {
+        y: {
+            beginAtZero: true,
+            title: {
+            display: true,
+            text: 'kr/kWh'
+            }
+        },
+        x: {
+            title: {
+            display: true,
+            text: 'Hour'
+            }
+        }
+        }
+    }
+    });
+
 }
