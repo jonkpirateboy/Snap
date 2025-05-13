@@ -47,3 +47,13 @@
     background-color: #2196f3; 
     color: #2196f3; 
 }
+
+body.alert-danger {
+    background-color: var(--bs-danger-bg-subtle);
+}
+body.alert-warning {
+    background-color: var(--bs-warning-bg-subtle);
+}
+body.alert-success {
+    background-color: var(--bs-success-bg-subtle);
+}

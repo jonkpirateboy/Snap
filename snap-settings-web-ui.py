@@ -76,7 +76,15 @@ TEMPLATE = """
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='snap.css') }}">
 </head>
-<body style="background-color: {{ status.wiz_color if status and status.wiz_color else '#f8f9fa' }};">
+{% set body_bg_class = {
+  "very_expensive": "alert-danger",
+  "expensive": "alert-danger",
+  "ok": "alert-warning",
+  "cheap": "alert-success",
+  "very_cheap": "alert-success"
+}[status.status] if status.status else "alert-light" %}
+
+<body class="{{ body_bg_class }}">
   <div class="container py-5">
     <h1 class="mb-4">Snap Control Panel</h1>
 
@@ -96,7 +104,7 @@ TEMPLATE = """
         {% if status.error %}
           <div class="alert alert-danger">Error fetching status: {{ status.error }}</div>
         {% else %}
-          <div class="alert alert-info">
+          <div class="alert alert-light">
             <strong>Current energy:</strong> {{ status.current_energy }} kr/kWh<br>
             <strong>Status:</strong>
             {% if status.status == "very_expensive" %}
@@ -182,63 +190,7 @@ TEMPLATE = """
 
   <!-- Bootstrap JS for tabs -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    function updateStatus() {
-      fetch("/api/status")
-        .then(response => response.json())
-        .then(data => {
-          updateLed("status-led-now", data.status);
-          updateLed("status-led-today", data.average_status);
-          triggerSyncAnimation();
-        });
-    }
-
-    function updateLed(id, status) {
-      const led = document.getElementById(id);
-      const text = document.getElementById(id + "-text");
-
-      let color = "";
-      let label = "";
-
-      if (status === "very_expensive") {
-        color = "red"; label = "Very Expensive";
-      } else if (status === "expensive") {
-        color = "orange"; label = "Expensive";
-      } else if (status === "ok") {
-        color = "orange"; label = "OK";
-      } else if (status === "cheap") {
-        color = "green"; label = "Cheap";
-      } else {
-        color = "green"; label = "Very Cheap";
-      }
-
-      if (led) {
-        led.className = `status-led ${color} on`;
-      }
-      if (text) {
-        text.textContent = label;
-      }
-    }
-
-    function triggerSyncAnimation() {
-      const led = document.getElementById("sync-led");
-      const text = document.getElementById("sync-text");
-      if (led && text) {
-        led.classList.add("on");
-        text.textContent = "Syncing...";
-        setTimeout(() => {
-          led.classList.remove("on");
-          text.textContent = "Sync";
-        }, 1000);
-      }
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      updateStatus();
-      setInterval(updateStatus, 60000); // every 60 seconds
-    });
-  </script>
-
+  <script src="{{ url_for('static', filename='snap.js') }}"></script>
 
 </body>
 </html>
