@@ -93,20 +93,11 @@ def get_status():
         else:
             avg_status = "very_cheap"
 
-        wiz_colors = {
-            "very_expensive": "#ffc9c9",   # Light red (like danger-200)
-            "expensive": "#ffe3c4",        # Light orange (like orange-200)
-            "ok": "#ffd59e",               # Softer amber (like orange-300)
-            "cheap": "#fff9dc",            # Light cream (like warning-100)
-            "very_cheap": "#ffffff"        # White
-        }
-
         return {
             "current_energy": result["current_energy"],
             "status": status,
             "average_energy": avg,
-            "average_status": avg_status,
-            "wiz_color": wiz_colors.get(status, "#ffffff")
+            "average_status": avg_status
         }
 
 

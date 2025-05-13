@@ -53,7 +53,8 @@ def index():
 
         if request.form.get("action") == "reboot":
             subprocess.Popen(["sudo", "reboot"])
-            return render_template_string(REBOOT_TEMPLATE)
+            status = get_status()
+            return render_template_string(REBOOT_TEMPLATE, settings=settings, labels=LABELS, status=status)
 
         return redirect("/")
 
@@ -137,7 +138,6 @@ TEMPLATE = """
             </p>
           </div>
 
-
         {% endif %}
       </div>
 
@@ -206,9 +206,17 @@ REBOOT_TEMPLATE = """
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='snap.css') }}">
 </head>
-<body style="background-color: {{ status.wiz_color if status and status.wiz_color else '#f8f9fa' }};">
+{% set body_bg_class = {
+  "very_expensive": "alert-danger",
+  "expensive": "alert-danger",
+  "ok": "alert-warning",
+  "cheap": "alert-success",
+  "very_cheap": "alert-success"
+}[status.status] if status.status else "alert-light" %}
+
+<body class="{{ body_bg_class }}">
   <div class="container py-5 text-center">
-    <div class="alert alert-warning" role="alert">
+    <div class="alert alert-light" role="alert">
       <h4 class="alert-heading mb-3">Rebooting...</h4>
       <div class="d-flex justify-content-center align-items-center mb-3">
         <div class="spinner-border spinner" role="status" aria-hidden="true"></div>
@@ -217,6 +225,8 @@ REBOOT_TEMPLATE = """
       <a href="/" class="btn btn-secondary mt-3">Return manually</a>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='snap.js') }}"></script>
   <script>
     function checkServer() {
       fetch("/", { method: "HEAD" })
