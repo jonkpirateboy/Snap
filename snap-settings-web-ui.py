@@ -12,7 +12,7 @@ LABELS = {
     "wiz_fallback_ip": "Wiz Fallback IP",
     "home_index": "Home Index",
     "led": "Enable LED",
-    "wiz": "Enable Wiz Control",
+    "wiz": "Enable Wiz",
     "price_breakpoints": {
         "_label": "Price Breakpoints",
         "very_expensive": "Very Expensive Threshold",
