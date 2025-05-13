@@ -52,9 +52,10 @@ def index():
         save_settings(settings)
 
         if request.form.get("action") == "reboot":
-            subprocess.Popen(["sudo", "reboot"])
-            status = get_status()
-            return render_template_string(REBOOT_TEMPLATE, settings=settings, labels=LABELS, status=status)
+          status = get_status()
+          html = render_template_string(REBOOT_TEMPLATE, settings=settings, labels=LABELS, status=status)
+          subprocess.Popen(["sudo", "reboot"])
+          return html
 
         return redirect("/")
 
