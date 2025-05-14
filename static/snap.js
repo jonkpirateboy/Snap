@@ -1,4 +1,3 @@
-// snap.js
 
 function updateStatus() {
   fetch("/api/status")
@@ -8,7 +7,7 @@ function updateStatus() {
       updateLed("status-led-today", data.average_status);
       triggerSyncAnimation();
 
-      // 🔧 Lägg till Bootstrap-bakgrund på <body>
+      // 🔧 Bootstrap background
       const body = document.body;
       if (body) {
         body.className = "";
@@ -21,13 +20,35 @@ function updateStatus() {
         };
         body.classList.add(bgMap[data.status] || "alert-light");
       }
-      console.log("Chart data:", data.raw_hours);
-      if (data.raw_hours) {
-        renderChart(data.raw_hours);
+
+      // ✅ Update status alert
+      const energyEl = document.getElementById("current-energy");
+      const labelEl = document.getElementById("status-label");
+
+      if (energyEl) {
+        energyEl.textContent = data.current_energy_display;
+      }
+
+      if (labelEl) {
+        const labelMap = {
+          very_expensive: ["Very Expensive", "text-bg-danger"],
+          expensive: ["Expensive", "text-bg-warning"],
+          ok: ["OK", "text-bg-warning"],
+          cheap: ["Cheap", "text-bg-success"],
+          very_cheap: ["Very Cheap", "text-bg-success"]
+        };
+
+        const [text, className] = labelMap[data.status] || [data.status, "text-bg-secondary"];
+        labelEl.textContent = text;
+        labelEl.className = `badge ${className}`;
+      }
+
+      // ✅ Chart update
+      if (data.raw_hours && data.breakpoints) {
+        renderChart(data.raw_hours, data.breakpoints);
       }
     });
 }
-
 
 function updateLed(id, status) {
   const led = document.getElementById(id);
@@ -48,12 +69,8 @@ function updateLed(id, status) {
     color = "green"; label = "Very Cheap";
   }
 
-  if (led) {
-    led.className = `status-led ${color} on`;
-  }
-  if (text) {
-    text.textContent = label;
-  }
+  if (led) led.className = `status-led ${color} on`;
+  if (text) text.textContent = label;
 }
 
 function triggerSyncAnimation() {
@@ -69,38 +86,13 @@ function triggerSyncAnimation() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  updateStatus();
-  setInterval(updateStatus, 60000); // every 60 seconds
-});
-
-// Update status info box
-const energyEl = document.getElementById("current-energy");
-const labelEl = document.getElementById("status-label");
-const alertEl = document.getElementById("status-alert");
-
-if (energyEl) energyEl.textContent = data.current_energy.toFixed(2).replace('.', ',');
-
-if (labelEl) {
-  const labels = {
-    very_expensive: "Very Expensive",
-    expensive: "Expensive",
-    ok: "OK",
-    cheap: "Cheap",
-    very_cheap: "Very Cheap"
-  };
-  labelEl.textContent = labels[data.status] || data.status;
-}
-
-// Chart
 let chart;
 
-function renderChart(data) {
+function renderChart(data, bp) {
   const canvas = document.getElementById("priceChart");
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
-
   const labels = data.map(item => {
     const date = new Date(item.startsAt);
     return !isNaN(date) ? date.getHours().toString().padStart(2, "0") + ":00" : "??";
@@ -108,76 +100,78 @@ function renderChart(data) {
 
   const prices = data.map(item => item.total ?? null);
 
-  if (chart) chart.destroy(); // Reset existing chart
+  if (chart) chart.destroy();
 
   chart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels,
-        datasets: [{
+      labels,
+      datasets: [{
         label: 'kr/kWh',
         data: prices,
         segment: {
-            borderColor: ctx => {
+          borderColor: ctx => {
             const y = ctx.p0.parsed.y;
-            if (y > 2.0) return 'red';
-            if (y > 1.5) return 'orange';
-            if (y > 1.0) return 'gold';
-            if (y > 0.5) return 'green';
-            return 'lightgreen';
-            }
+            if (y > bp.very_expensive) return 'red';
+            if (y > bp.expensive) return 'orange';
+            if (y > bp.ok) return 'gold';
+            if (y > bp.cheap) return 'lightgreen';
+            return 'green';
+          }
         },
         pointBackgroundColor: prices.map(y => {
-            if (y > 2.0) return 'red';
-            if (y > 1.5) return 'orange';
-            if (y > 1.0) return 'gold';
-            if (y > 0.5) return 'green';
-            return 'lightgreen';
+          if (y > bp.very_expensive) return 'red';
+          if (y > bp.expensive) return 'orange';
+          if (y > bp.ok) return 'gold';
+          if (y > bp.cheap) return 'lightgreen';
+          return 'green';
         }),
-        backgroundColor: 'rgba(0,0,0,0)', // no fill
+        backgroundColor: 'rgba(0,0,0,0)',
         fill: false,
         tension: 0.3,
         pointRadius: 5
-        }]
+      }]
     },
     options: {
-        animation: false,
-        responsive: true,
-        plugins: {
+      animation: false,
+      responsive: true,
+      plugins: {
         legend: {
-            labels: {
+          labels: {
             usePointStyle: true,
             pointStyle: 'line',
             color: '#000'
-            }
+          }
         },
         tooltip: {
-            mode: 'nearest',
-            intersect: false,
-            displayColors: false,
-            callbacks: {
-                label: function(context) {
-                return `${context.parsed.y.toFixed(2).replace('.', ',')} kr/kWh`;
-                }
-            }
+          mode: 'nearest',
+          intersect: false,
+          displayColors: false,
+          callbacks: {
+            label: context => `${context.parsed.y.toFixed(2).replace('.', ',')} kr/kWh`
+          }
         }
-        },
-        scales: {
+      },
+      scales: {
         y: {
-            beginAtZero: true,
-            title: {
+          beginAtZero: true,
+          title: {
             display: true,
             text: 'kr/kWh'
-            }
+          }
         },
         x: {
-            title: {
+          title: {
             display: true,
             text: 'Hour'
-            }
+          }
         }
-        }
+      }
     }
-    });
-
+  });
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+  updateStatus();
+  setInterval(updateStatus, 60000);
+});

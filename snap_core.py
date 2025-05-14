@@ -105,9 +105,10 @@ def get_status():
             avg_status = "very_cheap"
 
         return {
-            "current_energy": f"{result['current_energy']:.2f}".replace(".", ","),
+            "current_energy": round(result["current_energy"], 2), 
+            "current_energy_display": f"{result['current_energy']:.2f}".replace('.', ','), 
             "status": status,
-            "average_energy": avg,
+            "average_energy": round(avg, 2),
             "average_status": avg_status,
             "raw_hours": [
                 {
@@ -116,10 +117,9 @@ def get_status():
                 }
                 for hour in today_prices
                 if "startsAt" in hour and "total" in hour
-            ]
-
+            ],
+            "breakpoints": bp
         }
-
 
     except Exception as e:
         return {"error": str(e)}

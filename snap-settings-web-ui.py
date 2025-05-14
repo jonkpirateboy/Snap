@@ -107,19 +107,11 @@ TEMPLATE = """
           <div class="alert alert-danger">Error fetching status: {{ status.error }}</div>
         {% else %}
           <div class="alert alert-light">
-            <strong>Current energy:</strong> {{ status.current_energy }} kr/kWh<br>
+            <strong>Current energy:</strong> <span id="current-energy">{{ status.current_energy_display }}</span> kr/kWh<br>
             <strong>Status:</strong>
-            {% if status.status == "very_expensive" %}
-              <span class="text-danger">Very Expensive</span>
-            {% elif status.status == "expensive" %}
-              <span class="text-warning">Expensive</span>
-            {% elif status.status == "ok" %}
-              <span class="text-success">OK</span>
-            {% elif status.status == "cheap" %}
-              <span class="text-success">Cheap</span>
-            {% else %}
-              <span class="text-primary">Very Cheap</span>
-            {% endif %}
+            <span id="status-label" class="badge">
+              {{ status.status.replace('_', ' ').title() }}
+            </span>
           </div>
 
           <div class="mt-4 bg-black text-white p-4 rounded shadow-sm">
@@ -148,7 +140,7 @@ TEMPLATE = """
 
       <!-- SETTINGS TAB -->
       <div class="tab-pane fade" id="settings" role="tabpanel">
-        <form method="post" class="bg-white p-4 rounded shadow-sm mt-3">
+        <form method="post" class="alert alert-light mt-4 p-4 bg-white">
           {% for key, value in settings.items() %}
             {% if value is mapping %}
               <fieldset class="mb-3">
@@ -190,6 +182,8 @@ TEMPLATE = """
         </form>
       </div>
 
+      <small class="github"><a href="https://github.com/jonkpirateboy/Snap" target="_blank">GitHub</a></small>
+
     </div>
   </div>
 
@@ -222,7 +216,7 @@ REBOOT_TEMPLATE = """
 
 <body class="{{ body_bg_class }}">
   <div class="container py-5 text-center">
-    <div class="alert alert-light" role="alert">
+    <div class="alert alert-light p-4" role="alert">
       <h4 class="alert-heading mb-3">Rebooting...</h4>
       <div class="d-flex justify-content-center align-items-center mb-3">
         <div class="spinner-border spinner" role="status" aria-hidden="true"></div>

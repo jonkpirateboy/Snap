@@ -1,14 +1,32 @@
+/* General */
+a,
+a:hover,
+a:focus {
+    color: var(--bs-body-color);
+}
+
+/* Nav */
 .nav.nav-tabs {
     border-color: var(--bs-nav-tabs-link-active-bg);
 }
-.nav-link,
-.nav-link:hover {
+.nav.nav-tabs .nav-link {
     color: var(--bs-body-color);
 }
+.nav.nav-tabs .nav-link:not(.active):hover {
+    background: rgba(255,255,255,.4);
+}
+.nav.nav-tabs .nav-link:hover,
+.nav.nav-tabs .nav-link:focus {
+    color: var(--bs-body-color);
+    border-color: var(--bs-nav-tabs-link-active-bg);
+}
+
+/* Spinner */
 .spinner { 
     width: 3rem; height: 3rem; 
 }
 
+/* LED */
 .status-led {
     display: inline-block;
     width: 14px;
@@ -21,16 +39,13 @@
     transition: all 0.3s ease;
     margin-top: -.2rem;
 }
-
 .status-led.on {
     opacity: 1;
     box-shadow: 0 0 8px currentColor;
 }
-
 #sync-status {
     margin-bottom: 0;
 }
-
 .status-led.red { 
     background-color: #ff4c4c; 
     color: #ff4c4c; 
@@ -48,6 +63,7 @@
     color: #2196f3; 
 }
 
+/* Body */
 body.alert-danger {
     background-color: var(--bs-danger-bg-subtle);
 }
@@ -58,7 +74,14 @@ body.alert-success {
     background-color: var(--bs-success-bg-subtle);
 }
 
+/* Chart */
 #priceChart {
     width: 100%;
     max-height: 600px;
+}
+
+/* GitHub */
+small.github {
+    display: block;
+    text-align: center;
 }
