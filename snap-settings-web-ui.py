@@ -132,7 +132,7 @@ TEMPLATE = """
           </div>
 
           <div class="alert alert-light mt-4">
-            <canvas id="priceChart"></canvas>
+            <canvas id="priceChart" responsive="true"></canvas>
           </div>
 
         {% endif %}

@@ -169,6 +169,15 @@ function renderChart(data, bp) {
       }
     }
   });
+  // Auto-highlight the current hour
+  const currentHour = new Date().getHours();
+  const index = labels.findIndex(label => label.startsWith(currentHour.toString().padStart(2, "0")));
+  if (index !== -1) {
+    chart.setActiveElements([{ datasetIndex: 0, index }]);
+    chart.tooltip.setActiveElements([{ datasetIndex: 0, index }], { x: 0, y: 0 });
+    chart.update();
+  }
+
 }
 
 window.addEventListener("DOMContentLoaded", () => {

@@ -76,6 +76,7 @@ body.alert-success {
 
 /* Chart */
 #priceChart {
+    position: relative;
     width: 100%;
     max-height: 600px;
 }

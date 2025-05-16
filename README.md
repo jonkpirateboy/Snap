@@ -1,9 +1,11 @@
 # Snap
 Code and build instructions for [Snap](https://www.instagram.com/p/CVXhBlCs5un/), a simple Raspberry Pi and LED machine to show you how expensive the electricyty is at the moment. On row of LEDs shows the cost of the hour, the other row the cost of the day.
 
-UPDATE: Added a [Wiz bulb](https://www.wizconnected.com/en-ca/products/bulbs) to show the eneryg cost too. Simply change the variable `ip` to the ip address of your bulb. If you don't want to use the Wiz, simply set `wiz` to `False`
+UPDATE: Added a [Wiz bulb](https://www.wizconnected.com/en-ca/products/bulbs) to show the eneryg cost too. Simply change the variable `ip` to the ip address of your bulb. If you don't want to use the Wiz, simply set `wiz` to `False`.
 
-UPDATE: Moved all settings to the snap-settings.json file
+UPDATE: Moved all settings to the snap-settings.json file.
+
+UPDATE: Added a web UI for checking the price and make all settings.
 
 Like this.
 1. Only Green = Very cheap
@@ -72,7 +74,7 @@ Restart your Pi and press watch the lights.
 
 ![Screenshot of the web UI](assets/screenshot.jpg)
 
-If you want to have a web UI for the settings run this command:
+If you want to have a web UI for the price and settings run this command:
 
 `crontab -e`
 
@@ -90,12 +92,14 @@ And then add this at the end of the file:
 
 `pi ALL=(ALL) NOPASSWD: /sbin/reboot`
 
-After that you can browse to http://YOUR-HOST:5000 and make the settings.
+After that you can browse to http://YOUR-HOST:5000 and check how expensive the electricyty is at the moment and also the rest of the day, the you can also make the settings for the json file in a simple form.
 
 ## Learn and experiment
 
 If you want to change your script [Tibber has an excellent playground here](https://developer.tibber.com/explorer).
 
 And here you can read more about [GraphQL Concepts](https://developer.tibber.com/docs/guides/graphql-concepts).
+
+The price chard is built with [Chart.js](https://www.chartjs.org/).
 
 That's basically all I used for reference making this project. Good luck!
